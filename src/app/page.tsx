@@ -1,4 +1,5 @@
 import { Footer } from "@/components/footer";
+import { FAQ } from "@/components/landing/faq";
 import { FeaturesSection } from "@/components/landing/feature-section";
 import { HeadSection } from "@/components/landing/head-section";
 import { Navbar } from "@/components/landing/navbar";
@@ -14,6 +15,7 @@ export default function Home() {
       <FeaturesSection />
       <Testimonials />
       <Pricing />
+      <FAQ />
       <Footer />
     </>
   );
