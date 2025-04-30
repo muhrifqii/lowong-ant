@@ -1,8 +1,6 @@
-export enum JobType {
-  FULL_TIME = "FULL_TIME",
-  PART_TIME = "PART_TIME",
-  CONTRACT = "CONTRACT",
-}
+import { Database } from "./db"
+
+export type JobType = Database["public"]["Enums"]["job_type"];
 
 export const JobTypeLabel: Readonly<Record<JobType, string>> = {
   FULL_TIME: "Full-time",
@@ -10,3 +8,4 @@ export const JobTypeLabel: Readonly<Record<JobType, string>> = {
   CONTRACT: "Contract",
 }
 
+export type Job = Database["public"]["Tables"]["jobs"]["Row"];

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { JobType, JobTypeLabel } from "@/types/job";
+import { type UnionToTuple } from "type-fest"
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Card } from "./ui/card";
@@ -16,7 +17,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 const searchSchema = z.object({
   position: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional(),
   location: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional().or(z.literal("")),
-  jobType: z.array(z.nativeEnum(JobType)),
+  jobType: z.array(z.enum<string, UnionToTuple<JobType>>(["FULL_TIME", "PART_TIME", "CONTRACT"])),
 });
 
 type SearchFormValues = z.infer<typeof searchSchema>;
@@ -96,19 +97,19 @@ export function SearchJobInput() {
                         </FormControl>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="min-[900px]:w-[200px] w-[300px]" align="end">
-                        {Object.values(JobType).map((type) => (
-                          <DropdownMenuCheckboxItem
+                        {Object.keys(JobTypeLabel).map((type) => (
+                            <DropdownMenuCheckboxItem
                             key={type}
-                            checked={field.value?.includes(type)}
+                            checked={field.value?.includes(type as JobType)}
                             onCheckedChange={(checked) => {
                               const newValue = checked
-                                ? [...(field.value || []), type]
-                                : (field.value || []).filter((v) => v !== type);
+                              ? [...(field.value || []), type as JobType]
+                              : (field.value || []).filter((v) => v !== type);
                               field.onChange(newValue);
                             }}
-                          >
-                            {JobTypeLabel[type]}
-                          </DropdownMenuCheckboxItem>
+                            >
+                            {JobTypeLabel[type as JobType]}
+                            </DropdownMenuCheckboxItem>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
