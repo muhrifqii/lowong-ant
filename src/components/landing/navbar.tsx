@@ -109,7 +109,7 @@ export const Navbar = () => {
                     <GitHubLogoIcon className="w-5 h-5 text-foreground" />
                   </a>
                   <Link
-                    href="/login"
+                    href="/auth"
                     className={`w-[110px] ${buttonVariants({ variant: "default" })}`}
                     onClick={() => setIsOpen(false)}
                   >
@@ -151,7 +151,7 @@ export const Navbar = () => {
 
             <Button variant="default">
               <Link
-                href="/login"
+                href="/auth"
               >
                 Recruiter Login
               </Link>
