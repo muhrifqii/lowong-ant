@@ -133,9 +133,10 @@ export function JobList({ jobs, loading, actions, pagination, onPaginationChange
       maxSize: 2000,
     },
     rowCount: totalItems,
-    initialState: {
+    state: {
       pagination,
     },
+    manualPagination: true,
     onPaginationChange,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

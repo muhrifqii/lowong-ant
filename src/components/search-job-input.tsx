@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { JobType, JobTypeLabel } from "@/types/job";
+import { JobType, JobTypeLabel, SearchFilter } from "@/types/job";
 import { type UnionToTuple } from "type-fest"
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
@@ -13,7 +13,6 @@ import { Card } from "./ui/card";
 import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { SearchFilter } from "@/hooks/useUserJobs";
 
 const searchSchema = z.object({
   title: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional().or(z.literal("")),
@@ -42,9 +41,9 @@ export function SearchJobInput({ asUrlSearch = true, onSubmit: handleSubmit }: S
   function onSubmit(values: SearchFormValues) {
     if (asUrlSearch) {
       const params = new URLSearchParams();
-      if (values.title) params.append("position", values.title);
+      if (values.title) params.append("title", values.title);
       if (values.location) params.append("location", values.location);
-      if (values.job_type.length > 0) params.append("jobType", values.job_type.join(","));
+      if (values.job_type.length > 0) params.append("job_type", values.job_type.join(","));
       router.push(`/jobs?${params.toString()}`);
       return;
     }

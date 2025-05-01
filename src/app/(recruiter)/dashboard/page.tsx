@@ -73,7 +73,7 @@ export default function DashboardPage() {
     paging, setPaging,
     fetchFn,
   } = useUserJobList({
-    pagination: { pageIndex: 0, pageSize: 10 }
+    pagination: { pageIndex: 0, pageSize: 1 }
   });
   const [mode, setMode] = useState<ModePayload>({ mode: null });
 
