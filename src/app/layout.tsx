@@ -34,7 +34,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-            <Toaster />
+            <Toaster duration={3500} position="top-center" richColors/>
             {children}
         </ThemeProvider>
 

@@ -22,31 +22,16 @@ import LogoIcon from "@/assets/icon.svg";
 import Link from "next/link";
 import Image from "next/image";
 
-interface RouteProps {
+export type RouteProps = {
   href: string;
   label: string;
 }
 
-const routeList: RouteProps[] = [
-  {
-    href: "#features",
-    label: "Features",
-  },
-  {
-    href: "#testimonials",
-    label: "Testimonials",
-  },
-  {
-    href: "#pricing",
-    label: "Pricing",
-  },
-  {
-    href: "#faq",
-    label: "FAQ",
-  },
-];
+type NavbarProps = {
+  routeList: RouteProps[],
+};
 
-export const Navbar = () => {
+export const Navbar = (props: NavbarProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-background dark:border-b-slate-700 dark:bg-background">
@@ -87,8 +72,8 @@ export const Navbar = () => {
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
-                  {routeList.map(({ href, label }: RouteProps) => (
-                    <a
+                  {props.routeList.map(({ href, label }: RouteProps) => (
+                    <Link
                       rel="noreferrer noopener"
                       key={label}
                       href={href}
@@ -96,7 +81,7 @@ export const Navbar = () => {
                       className={buttonVariants({ variant: "ghost" })}
                     >
                       {label}
-                    </a>
+                    </Link>
                   ))}
                   <a
                     rel="noreferrer noopener"
@@ -122,8 +107,8 @@ export const Navbar = () => {
 
           {/* desktop */}
           <nav className="hidden md:flex gap-2">
-            {routeList.map((route: RouteProps, i) => (
-              <a
+            {props.routeList.map((route: RouteProps, i) => (
+              <Link
                 rel="noreferrer noopener"
                 href={route.href}
                 key={i}
@@ -132,7 +117,7 @@ export const Navbar = () => {
                 })}`}
               >
                 {route.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
