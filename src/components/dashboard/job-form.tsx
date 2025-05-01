@@ -28,7 +28,8 @@ const formSchema = z.object({
 });
 
 export type JobFormValues = z.infer<typeof formSchema>;
-export type SubmitJobFn = (value: { createJob?: CreateJob, updateJob?: UpdateJob }) => Promise<{error: Error | null}>;
+export type SubmitJobArg = { createJob?: CreateJob, updateJob?: UpdateJob, id?: string };
+export type SubmitJobFn = (value: SubmitJobArg) => Promise<{error: Error | null}>;
 
 export type JobFormProps = {
   mode: "create" | "update",
@@ -52,7 +53,7 @@ export function JobForm({ mode, initialValues, onSubmit, onSuccess }: JobFormPro
   const handleSubmit = async (values: JobFormValues) => {
     let err: Error | null;
     if (mode === "update") {
-      const { title, description, job_type, location } = form.formState.dirtyFields;
+      const { title, description, job_type, location, company_name } = form.formState.dirtyFields;
       const updateJob: UpdateJob = {};
       if (title) {
         updateJob.title = values.title;
@@ -66,7 +67,10 @@ export function JobForm({ mode, initialValues, onSubmit, onSuccess }: JobFormPro
       if (location) {
         updateJob.location = values.location;
       }
-      const { error } = await onSubmit({ updateJob });
+      if (company_name) {
+        updateJob.company_name = values.company_name;
+      }
+      const { error } = await onSubmit({ updateJob, id: initialValues?.id });
       err = error;
     } else {
       const { error } = await onSubmit({ createJob: values });

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Job } from "@/types/job";
+import { CreateJob, Job, UpdateJob } from "@/types/job";
 import { getPagination } from "@/lib/paging";
 import { getClientWithSession } from "@/lib/guard";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@/types/db";
 
 type Props = {
   ascending?: boolean
@@ -70,4 +72,26 @@ export function useUserJobList({
     paging,
     setPaging,
   };
+}
+
+
+export function userJobCRUD(client: SupabaseClient<Database>) {
+
+  const create = async (createJob: CreateJob) => {
+    return await client.from("jobs").insert(createJob).select();
+  }
+
+  const read = async (id: string) => {
+    return await client.from("jobs").select("*").eq("id", id);
+  }
+
+  const update = async (updateJob: UpdateJob, id: string) => {
+    return await client.from("jobs").update(updateJob).eq("id", id).select();
+  }
+
+  const remove = async (id: string) => {
+    return await client.from("jobs").delete().eq("id", id);
+  }
+
+  return { create, read, update, remove }
 }

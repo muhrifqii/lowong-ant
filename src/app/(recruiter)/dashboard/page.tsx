@@ -1,16 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useUserJobList } from "@/hooks/useUserJobs";
+import { userJobCRUD, useUserJobList } from "@/hooks/useUserJobs";
 import { JobList, JobListProps } from "@/components/dashboard/job-list";
-import { CreateJob, Job, UpdateJob } from "@/types/job";
+import { Job, UpdateJob } from "@/types/job";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Plus } from "lucide-react";
-import { JobForm, SubmitJobFn } from "@/components/dashboard/job-form";
+import { JobForm, SubmitJobArg, SubmitJobFn } from "@/components/dashboard/job-form";
 import { OnChangeFn, RouterlikeType, Updater } from "@/types/common";
 import { useState } from "react";
 import { getClientWithSession } from "@/lib/guard";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type ManageJobSheetProps = {
   mode: ModePayload,
@@ -46,23 +47,21 @@ function ManageJobSheet({ mode, onOpenChange, onSubmit, onSuccess }: ManageJobSh
   );
 }
 
-const submitFn = (router: RouterlikeType) => async (
-  {createJob, updateJob}
-: {
-  createJob?: CreateJob,
-  updateJob?: UpdateJob,
-}) => {
+const mutateFnCreator = (router: RouterlikeType) => async (
+  {createJob, updateJob, idForDeletion, id}
+: SubmitJobArg & { idForDeletion?: string }) => {
   const { client } = await getClientWithSession(router);
   if (!client) {
     return { error: Error("") };
   }
+  const { create, update, remove } = userJobCRUD(client);
 
   if (createJob) {
-    const result = await client.from("jobs").insert(createJob).select();
-    return result;
-  } else if (updateJob) {
-    const result = await client.from("jobs").update(updateJob).select();
-    return result;
+    return create(createJob);
+  } else if (updateJob && id) {
+    return update(updateJob, id);
+  } else if (idForDeletion) {
+    return remove(idForDeletion);
   }
   return { error: null };
 }
@@ -78,7 +77,7 @@ export default function DashboardPage() {
   });
   const [mode, setMode] = useState<ModePayload>({ mode: null });
 
-  const submit = submitFn(router);
+  const mutation = mutateFnCreator(router);
   const actions: JobListProps["actions"] = {
     view: (item: Job) => {
       console.log('view', item);
@@ -86,8 +85,12 @@ export default function DashboardPage() {
     edit: (item: Job) => {
       setMode({ mode: "update", job: item });
     },
-    delete: (item: Job) => {
-      console.log('delete', item);
+    delete: async (item: Job) => {
+      const { error } = await mutation({ idForDeletion: item.id });
+      if (error) toast.error(error.message);
+      else {
+        await fetchFn();
+      }
     }
   };
 
@@ -103,14 +106,13 @@ export default function DashboardPage() {
     setMode({ mode: null });
     await fetchFn();
   };
-  console.log("loading", loading, jobs)
 
   return (
     <main className="flex w-full flex-col justify-start gap-6">
       <ManageJobSheet
         mode={mode}
         onOpenChange={onSheetOpenChanged}
-        onSubmit={submit}
+        onSubmit={mutation}
         onSuccess={onSuccessChange}
         />
       <div className="relative flex flex-col gap-4 overflow-hidden px-4 lg:px-6">

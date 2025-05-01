@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PagingView } from "@/components/paging-view";
 import { OnChangeFn } from "@/types/common";
 import { cn } from "@/lib/utils";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export type JobListProps = {
   jobs: Job[],
@@ -68,11 +69,32 @@ function prepareColumns(action: JobListProps["actions"]): ColumnDef<Job>[] {
               <DropdownMenuItem onClick={() => action.view(item)}>View</DropdownMenuItem>
               <DropdownMenuItem onClick={() => action.edit(item)}>Edit</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => action.delete(item)}
-                className={cn("text-destructive hover:text-destructive")}>
-                  Delete
-              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className={cn("text-destructive hover:text-destructive")}>
+                      Delete
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete the job post.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={() => action.delete(item)}>
+                        Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
             </DropdownMenuContent>
           </DropdownMenu>
         );
