@@ -9,3 +9,5 @@ export const JobTypeLabel: Readonly<Record<JobType, string>> = {
 }
 
 export type Job = Database["public"]["Tables"]["jobs"]["Row"];
+export type CreateJob = Database["public"]["Tables"]["jobs"]["Insert"];
+export type UpdateJob = Database["public"]["Tables"]["jobs"]["Update"];

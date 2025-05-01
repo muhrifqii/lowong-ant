@@ -4,6 +4,16 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+type ColumnSizingDef = {
+  maxSize?: number,
+  minSize?: number,
+  size?: number,
+}
+
+type ColumnSizingDefProp = {
+  sizing?: ColumnSizingDef
+}
+
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
@@ -65,10 +75,11 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({ sizing, className, ...props }: React.ComponentProps<"th"> & ColumnSizingDefProp) {
   return (
     <th
       data-slot="table-head"
+      style={{ minWidth: sizing?.minSize, maxWidth: sizing?.maxSize, width: sizing?.size }}
       className={cn(
         "text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
@@ -78,10 +89,11 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   )
 }
 
-function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+function TableCell({ sizing, className, ...props }: React.ComponentProps<"td"> & ColumnSizingDefProp) {
   return (
     <td
       data-slot="table-cell"
+      style={{ minWidth: sizing?.minSize, maxWidth: sizing?.maxSize, width: sizing?.size }}
       className={cn(
         "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className

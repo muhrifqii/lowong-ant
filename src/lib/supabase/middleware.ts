@@ -4,6 +4,9 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  // clone current url
+  const url = request.nextUrl.clone()
+
   // Create an unmodified response
   let supabaseResponse = NextResponse.next({
     request: {
@@ -41,20 +44,19 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (user && (
-    request.nextUrl.pathname.startsWith('/auth')
-    || request.nextUrl.pathname === '/'
+    url.pathname.startsWith('/auth') || url.pathname === '/'
   )) {
     // has user and accessing any auth page or landing page, then go to dashboard
-    return NextResponse.redirect('/dashboard')
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
   }
 
   if (!user) {
     // console.log(request.nextUrl.href);
-    if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (url.pathname.startsWith('/dashboard')) {
       // no user, potentially respond by redirecting the user to the login page
-      const url = request.nextUrl.clone()
-      url.pathname = '/auth'
-      return NextResponse.redirect(url)
+      url.pathname = '/auth';
+      return NextResponse.redirect(url);
     }
   }
 
