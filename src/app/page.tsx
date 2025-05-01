@@ -6,6 +6,7 @@ import { HeadSection } from "@/components/landing/head-section";
 import { Navbar, RouteProps } from "@/components/landing/navbar";
 import { Pricing } from "@/components/landing/pricing";
 import { Testimonials } from "@/components/landing/testimonials";
+import { Suspense } from "react";
 
 
 const routeList: RouteProps[] = [
@@ -31,7 +32,9 @@ export default function Home() {
 
   return (
     <>
-      <AuthCallbackHandler />
+      <Suspense>
+        <AuthCallbackHandler />
+      </Suspense>
       <Navbar routeList={routeList}/>
       <HeadSection />
       <FeaturesSection />

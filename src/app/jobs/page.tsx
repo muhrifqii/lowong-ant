@@ -8,9 +8,9 @@ import { useJobSearch } from "@/hooks/useUserJobs";
 import { mapSearchParamToJobSearchFilter } from "@/lib/mapper";
 import { Job } from "@/types/job";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
-export default function JobsPage() {
+function JobWithQueryHandler() {
   const {
     jobs,
     selected,
@@ -31,7 +31,6 @@ export default function JobsPage() {
       window.history.replaceState(null, '', '/jobs');
     }
   }, [params]);
-
   return (
     <main className="">
       <div>
@@ -66,5 +65,13 @@ export default function JobsPage() {
         }
       </div>
     </main>
+  );
+}
+
+export default function JobsPage() {
+  return (
+    <Suspense>
+      <JobWithQueryHandler />
+    </Suspense>
   );
 }
