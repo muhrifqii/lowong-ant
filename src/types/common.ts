@@ -5,3 +5,6 @@ export type RouterlikeType = {
   push: (href: string) => void,
   replace: (href: string) => void,
 };
+export type SlugParam = {
+  params: Promise<{ [key: string]: string }>
+};

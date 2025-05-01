@@ -86,33 +86,33 @@ export const Footer = () => {
         <div className="flex flex-col gap-2">
           <h3 className="font-bold text-lg">About</h3>
           <div>
-            <a
+            <Link
               rel="noreferrer noopener"
-              href="#"
+              href="/#features"
               className="opacity-60 hover:opacity-100"
             >
               Features
-            </a>
+            </Link>
           </div>
 
           <div>
-            <a
+            <Link
               rel="noreferrer noopener"
-              href="#"
+              href="/#pricing"
               className="opacity-60 hover:opacity-100"
             >
               Pricing
-            </a>
+            </Link>
           </div>
 
           <div>
-            <a
+            <Link
               rel="noreferrer noopener"
-              href="#"
+              href="/#faq"
               className="opacity-60 hover:opacity-100"
             >
               FAQ
-            </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -80,7 +80,7 @@ export default function DashboardPage() {
   const mutation = mutateFnCreator(router);
   const actions: JobListProps["actions"] = {
     view: (item: Job) => {
-      console.log('view', item);
+      router.push(`/jobs/${item.id}`);
     },
     edit: (item: Job) => {
       setMode({ mode: "update", job: item });

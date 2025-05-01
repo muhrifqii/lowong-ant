@@ -17,7 +17,7 @@ export function HeadSection() {
             <Link href="/jobs">Browse Jobs</Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/dashboard/jobs/new">Post a Job</Link>
+            <Link href="/dashboard">Post a Job</Link>
           </Button>
         </div>
       </div>

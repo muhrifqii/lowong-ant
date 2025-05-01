@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar, SidebarContent, SidebarHeader, } from "./ui/sidebar";
+import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, } from "./ui/sidebar";
 
 export function AppSidebar() {
   return (
@@ -9,6 +9,11 @@ export function AppSidebar() {
         {/* <NavUser user={user} /> */}
       </SidebarHeader>
       <SidebarContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <h1 className="text-3xl mx-4">Nav feature coming soon</h1>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarContent>
     </Sidebar>
   )

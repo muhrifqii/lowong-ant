@@ -44,7 +44,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (user && (
-    url.pathname.startsWith('/auth') || url.pathname === '/'
+    url.pathname.startsWith('/auth')
   )) {
     // has user and accessing any auth page or landing page, then go to dashboard
     url.pathname = '/dashboard';
