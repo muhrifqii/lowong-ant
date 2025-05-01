@@ -13,35 +13,51 @@ import { Card } from "./ui/card";
 import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { SearchFilter } from "@/hooks/useUserJobs";
 
 const searchSchema = z.object({
-  position: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional(),
+  title: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional().or(z.literal("")),
   location: z.string().min(3, "At least 3 characters long").max(50, "At most 50 characters long").optional().or(z.literal("")),
-  jobType: z.array(z.enum<string, UnionToTuple<JobType>>(["FULL_TIME", "PART_TIME", "CONTRACT"])),
+  job_type: z.array(z.enum<string, UnionToTuple<JobType>>(["FULL_TIME", "PART_TIME", "CONTRACT"])),
 });
 
 type SearchFormValues = z.infer<typeof searchSchema>;
 
-export function SearchJobInput() {
+type SearchJobInputProp = {
+  onSubmit?: (search?: SearchFilter) => void,
+  asUrlSearch?: boolean,
+};
+
+export function SearchJobInput({ asUrlSearch = true, onSubmit: handleSubmit }: SearchJobInputProp) {
   const router = useRouter();
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
-      position: "",
+      title: "",
       location: "",
-      jobType: [],
+      job_type: [],
     },
   });
 
   function onSubmit(values: SearchFormValues) {
-    const params = new URLSearchParams();
-    if (values.position) params.append("position", values.position);
-    if (values.location) params.append("location", values.location);
-    if (values.jobType) params.append("jobType", values.jobType.join(","));
-    router.push(`/jobs?${params.toString()}`);
+    if (asUrlSearch) {
+      const params = new URLSearchParams();
+      if (values.title) params.append("position", values.title);
+      if (values.location) params.append("location", values.location);
+      if (values.job_type.length > 0) params.append("jobType", values.job_type.join(","));
+      router.push(`/jobs?${params.toString()}`);
+      return;
+    }
+    if (handleSubmit) {
+      if (!values.title && !values.location && values.job_type.length === 0) {
+        handleSubmit();
+      } else {
+        handleSubmit({...values, title: values.title ?? ""});
+      }
+    }
   }
-  return (
 
+  return (
       <div className="container mx-auto px-4 max-w-5xl">
         <Card className="p-6 md:p-8 shadow-md border border-border rounded-2xl">
           <Form {...form}>
@@ -51,7 +67,7 @@ export function SearchJobInput() {
             >
               <FormField
                 control={form.control}
-                name="position"
+                name="title"
                 render={({ field }) => (
                   <FormItem className="w-full flex-1">
                     <FormControl>
@@ -79,7 +95,7 @@ export function SearchJobInput() {
               />
               <FormField
                 control={form.control}
-                name="jobType"
+                name="job_type"
                 render={({ field }) => (
                   <FormItem className="w-full min-[900px]:w-[200px]">
                     <DropdownMenu>

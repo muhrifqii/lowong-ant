@@ -2,7 +2,18 @@ import { Briefcase, Building2, Calendar, MapPin } from "lucide-react";
 import { Job, JobTypeLabel } from "@/types/job";
 import { format } from 'date-fns';
 
-export function JobDetailCard({ job }: { job: Job }) {
+export function JobDetailCard({ job }: { job: Job | null }) {
+
+  if (!job) {
+    return (
+      <div className="w-full">
+        <section className="bg-card border border-border rounded-2xl p-6 shadow-sm items-center">
+          <h2 className="text-xl font-semibold mb-4 text-foreground m-auto">Select The Job First</h2>
+        </section>
+      </div>
+    );
+  }
+
   const { company_name, location, job_type, description, title, created_at } = job;
 
   return (
